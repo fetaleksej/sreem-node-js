@@ -1,0 +1,97 @@
+@font-face {
+    font-family: MyriadPro; /* Имя шрифта */
+    src: 	url('/css/MyriadPro-Regular.woff') format('woff'), /* Современные браузеры */
+			url('/css/MyriadPro-Regular.ttf')  format('truetype'); /* Safari, Android, iOS */
+	font-weight: normal;
+    font-style: normal;
+}
+body{
+	margin: 0px;
+	background: #001940;
+	background-image: url("/image/u.png");
+	background-size: 700px;
+	background-repeat: no-repeat;
+	background-position-y: 100%;
+	font-family: MyriadPro;
+	color: #70A1C9;
+}
+.switch{
+	height: 25px;
+	width: 25px;
+	position: absolute;
+	background: #6292DD;
+	border-radius: 3px;
+	z-index: 10;
+	top: 40px;
+	font-size: 23px;
+	color: #001940;
+	text-align: center;
+	cursor: pointer;
+	left: 50%;
+	margin-left: 450px;
+}
+.point{
+	float: right;
+	font-size: 12px;
+	width: 50px;
+	height: 100%
+}
+.user-name{
+	float: left;
+	height: 100%
+}
+.result-table{
+	width: 100%;
+	border-spacing: 0px;
+}
+.first-tr{
+	background: #001f4e;
+}
+.result-table td{
+	padding-left: 7px;
+	padding-top: 7px;
+}
+.chart{
+	position: relative;
+	width: 50%;
+	height: 100%;
+	float: left;
+}
+.inner-window{
+	padding: 10px;
+}
+h1{
+	font-weight: lighter;
+	color: #C3E0FF;
+	margin: 0px;
+}
+p{
+	margin: 0;
+}
+.logo{
+	margin-bottom: 30px;
+}
+.content{
+	float: left;
+	left: 50%;
+	position: relative;
+	margin-top: 50px;
+	margin-left: -425px;
+	width: 850px;
+	margin-bottom: 150px;
+	color: #2c78ed;
+}
+.window{
+	width: 400px;
+	height: 300px;
+	float: left;
+	border-radius: 3px 3px 3px 3px;
+	background: #003d9d;
+	border: solid 2px #1a52a8;
+	background-image: -webkit-linear-gradient(left,#003d9d,#00327f);
+	margin-right: 20px;
+	margin-top: 20px;
+}
+.big-window{
+	width: 825px;
+}
