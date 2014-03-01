@@ -7,6 +7,9 @@ var CApplication = require("./module/CApplication");
 var sql = new (require("./module/CMySqlRequest"))('fr37729.tw1.ru', 'fr37729_math', 'fr37729_math', 'xorxordiv');
 var Ajax = new(require("./module/CAjax"))(sql);
 //---------------------------------Server---------------------------------------------------
+var ipaddr  = process.env.OPENSHIFT_NODEJS_IP || "127.0.0.1";
+var port    = process.env.OPENSHIFT_NODEJS_PORT || 8080;
+
 var server = http.createServer(function(req,res){
 	var app = new CApplication(req,res,function(req, res){
 		if(req.url == "/"){
@@ -27,7 +30,7 @@ var server = http.createServer(function(req,res){
 	});
 	app.run();
 });
-server.listen(8080);
+server.listen(port, ipaddr);
 
 //--------------------------------Server Control---------------------------------------------
 var consoleInput = process.openStdin()
