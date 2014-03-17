@@ -33,7 +33,7 @@ var server = http.createServer(function(req,res){
 server.listen(port, ipaddr);
 
 //--------------------------------Server Control---------------------------------------------
-var consoleInput = process.openStdin()
+/*var consoleInput = process.openStdin()
 String.prototype.trim = function(){return this.replace(/^\s+|\s+$/g, '');};
 
 consoleInput.addListener("data",function(d){
@@ -56,5 +56,5 @@ consoleInput.addListener("data",function(d){
 		HttpFile.clearCache();
 		return;
 	}
-})
+})*/
 //------------------------------------------------------------------------------------
