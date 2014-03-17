@@ -65,9 +65,11 @@ var CMain = function(){
   CSwitcher.call(this);
   this.countLoaded = 0;
   this.timestampList = 0;
+  this.timestampStat = 0;
   this.point = 5;
   this.timeDelay = 2000;
   this.ajaxListTimeHendle = null;
+  this.ajaxStatTimeHendle = null;
   this.onLoad = function(){
     if(++this.countLoaded < 2) 
       return;
@@ -78,8 +80,36 @@ var CMain = function(){
     this.startAnimateSwitcher($(".switch"), $(".switch").find("div"));
   }
   this.startChartAjax = function(){
-    document.PieChart1.draw3D([["Оценка 2",20],["Оценка 5", 20],["Оценка 4", 53],["Оценка 3", 40]]);
-    document.PieChart2.draw3D([["Тест 'Прямоугольник' прошли",20],["Тест 'Треугольник' прошли", 20]]);
+    var self = this;
+    $.ajax({
+      url: "/ajax/?method=statistic&pointType=" + this.point + "&timestamp=" + this.timestampStat,
+    }).done(function(data){
+      if(!data){
+        self.updataChart(data);
+        return;
+      }
+      data = JSON.parse(data);
+      self.timestampStat = data.date;
+      self.updataChart.call(self, data.data);
+    });  
+  }
+  this.updataChart = function(data){
+    if(data){
+      var arChartTheme = Array();
+      var arChartPoint = Array();
+      for(key in data.theme ){
+        arChartTheme.push(["Тест '" + key + "' прошли",data.theme[key]]);
+      }
+      for(key in data.point ){
+        arChartPoint.push(["Оценка " + key,data.point[key]]);
+      }
+      document.PieChart1.draw3D(arChartPoint);
+      document.PieChart2.draw3D(arChartTheme);
+    }
+    var self = this;
+    this.ajaxStatTimeHendle = setTimeout(function(){
+      self.startChartAjax.call(self);
+    },this.timeDelay);
   }
   this.startListAjax = function(){
     var self = this;
@@ -92,7 +122,7 @@ var CMain = function(){
       }
       data = JSON.parse(data);
       self.timestampList = data.date;
-      self.updataList(data.data);
+      self.updataList.call(self, data.data);
     });  
   }
   this.updataList = function(data){
@@ -120,6 +150,11 @@ var CMain = function(){
     this.timestampList = 0;
     this.point = type;
     this.startListAjax();
+
+    if( this.ajaxStatTimeHendle )
+      clearTimeout(this.ajaxStatTimeHendle);
+    this.timestampStat = 0;
+    this.startChartAjax();
   }
   var self = this;
   (function(){

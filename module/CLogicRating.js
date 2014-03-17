@@ -40,11 +40,11 @@ var Class = function(){
 			return "B";
 		if(point <= 79 && point >= 75)
 			return "B-";
-		if(point <= 70 && point >= 74)
+		if(point <= 74 && point >= 70)
 			return "C+";
-		if(point <= 65 && point >= 69)
+		if(point <= 69 && point >= 65)
 			return "C";
-		if(point <= 60 && point >= 64)
+		if(point <= 64 && point >= 60)
 			return "C-";
 		if(point <= 59 && point >= 55)
 			return "D+";

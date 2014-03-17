@@ -22,14 +22,12 @@ var Class = function(host, db, user, password){
 		var onRequest = callback;
 		this.createConnection(function(){
 			if(err = this.getLastError()){
-				this.errors.push(err);
-				onRequest.call(this,null);
+				onRequest.call(this, null, err);
 				return;
 			}
 			var self = this;
 			this.connection.query("SELECT * FROM `result` ORDER BY `date_create` DESC LIMIT 8",function(err, rows, field){
 				if(err){
-					self.errors.push(err);
 					onRequest.call(self, null);
 					return;
 				}
@@ -55,16 +53,14 @@ var Class = function(host, db, user, password){
 		var onRequest = callback;
 		this.createConnection(function(err){
 			if(err = this.getLastError()){
-				this.errors.push(err);
-				onRequest.call(this,null);
+				onRequest.call(this, null, err);
 				return;
 			}
 			var self = this;
 			this.connection.query(	"SELECT result.*, theme.name as theme_name, theme.description as theme_description FROM `result`,`theme` WHERE result.id_theme = theme.id",
 				function(err, rows, field){
 					if(err){
-						self.errors.push(err);
-						onRequest.call(self, null);
+						onRequest.call(self, null, err);
 						return;
 					}
 					var point = new CLogicRating();
@@ -76,11 +72,32 @@ var Class = function(host, db, user, password){
 					var resPoint = {"5": point.statWPoints, "16": point.stat16Points, "100": point.stat100Points};
 					var arResult = {date: (new Date()).getTime(), data: {theme: resTheme, point: resPoint}};
 					self.cache.statistics = arResult;
-					onRequest.call(self, arResult);	
+					onRequest.call(self, arResult, null);	
 			});
 		});
+	} 
+	this.addNewResultTest = function(name, point, theme, callback){
+		if(typeof(callback) != "function")
+			return;
+		this.createConnection(function(err){
+			if(err = this.getLastError()){
+				callback.call(this, err);
+				return;
+			}
+			var self = this;
+			this.connection.query('INSERT INTO `result`(`name`, `id_theme`, `result`) VALUES ("'+ name +'", ' + theme + ', ' + point + ')', function(err, rows, field){
+				var result = true;
+				if(err)
+					result = false;
+				if(result)
+					self.clearCache.call(self);
+
+				callback.call(self, result, err);
+			});
+		})
 	}
 	this.createConnection = function(callback){
+		this.errors = Array();
 		if(typeof(callback) != "function")
 			return;
 		clearTimeout(this.timerHandle);

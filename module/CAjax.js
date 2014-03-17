@@ -9,6 +9,10 @@ var Class = function(sql){
 		var self = this;
 		if(req.GET["method"] == "list"){
 			this.sql.getListResult(function(item){
+				if( !item ){
+					self.onRun.call(self, request, respons);
+					return;
+				}
 				if( item.date == request.GET["timestamp"] ){
 					self.onRun.call(self, request, respons);
 					return;
@@ -26,12 +30,24 @@ var Class = function(sql){
 			return;
 		}
 		if(req.GET["method"] == "statistic"){
-			if( item.date == request.GET["timestamp"] ){
-				self.onRun.call(self, request, respons);
-				return;
-			}
-			if(req.GET["pointType"] != 16 && req.GET["pointType"] != 100)
-				req.GET["pointType"] = 5;
+			this.sql.getStatisticsData(function(item){
+				if( !item ){
+					self.onRun.call(self, request, respons);
+					return;
+				}
+				if( item.date == request.GET["timestamp"] ){
+					self.onRun.call(self, request, respons);
+					return;
+				}
+				if(req.GET["pointType"] != 16 && req.GET["pointType"] != 100)
+					req.GET["pointType"] = 5;
+				var retItem = {}
+				retItem.date = item.date;
+				retItem.data = {};
+				retItem.data.theme = item.data.theme;
+				retItem.data.point = item.data.point[req.GET["pointType"]];
+				self.onRun.call(self, request, respons, retItem);
+			});
 			return;
 		}
 		this.onRun(req, res);
